@@ -2,7 +2,7 @@ import prettier from 'eslint-config-prettier';
 
 export default [
     {
-        ignores: ['node_modules/**', '.wrangler/**'],
+        ignores: ['node_modules/**', '.wrangler/**', '**/.wrangler/**'],
     },
     {
         files: ['**/*.js'],

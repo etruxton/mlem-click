@@ -93,10 +93,10 @@ body {
 }
 
 .mlem-button {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     border: none;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--pink-soft) 0%, var(--pink-medium) 100%);
@@ -137,6 +137,14 @@ body {
     bottom: 0;
     left: 0;
     z-index: -1;
+}
+
+.sound-hint {
+    position: fixed;
+    bottom: 1rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    z-index: 10;
 }
 
 .footer {
@@ -221,6 +229,12 @@ body {
 .theme-toggle .icon-sun,
 .theme-toggle .icon-moon {
     position: absolute;
+    left: 50%;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
     transition:
         opacity 0.3s ease,
         transform 0.3s ease,
@@ -229,24 +243,24 @@ body {
 
 .theme-toggle .icon-sun {
     opacity: 1;
-    transform: rotate(0deg);
+    transform: translate(-47%, -52%) rotate(0deg);
     color: #f59e0b;
 }
 
 .theme-toggle .icon-moon {
     opacity: 0;
-    transform: rotate(-90deg);
+    transform: translate(-47%, -52%) rotate(-90deg);
     color: var(--bg-secondary);
 }
 
 [data-theme='dark'] .theme-toggle .icon-sun {
     opacity: 0;
-    transform: rotate(90deg);
+    transform: translate(-47%, -52%) rotate(90deg);
 }
 
 [data-theme='dark'] .theme-toggle .icon-moon {
     opacity: 1;
-    transform: rotate(0deg);
+    transform: translate(-47%, -52%) rotate(0deg);
     color: #fef6fb;
 }
 
