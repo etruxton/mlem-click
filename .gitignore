@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Config with secrets (generated at build time)
+frontend/config.js
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

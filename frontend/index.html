@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MLEM</title>
+        <meta
+            name="description"
+            content="Click the button. Hear the mlem. Join the mlem counter."
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    </head>
+    <body>
+        <!-- Theme toggle -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <span class="icon-sun">&#9728;</span>
+            <span class="icon-moon">&#9790;</span>
+        </button>
+
+        <div class="container">
+            <div class="counter-display">
+                <div class="counter">
+                    <span class="label">your mlems</span>
+                    <span id="session-count" class="count">0</span>
+                </div>
+                <div class="counter">
+                    <span class="label">total mlems</span>
+                    <span id="total-count" class="count">...</span>
+                </div>
+            </div>
+
+            <button id="mlem-button" class="mlem-button">MLEM</button>
+
+            <!-- Turnstile invisible widget -->
+            <div id="turnstile-container"></div>
+        </div>
+
+        <footer class="footer">
+            Made by
+            <a href="https://ericatruxton.com" target="_blank" rel="noopener">Erica Truxton</a>
+        </footer>
+
+        <!-- Mlem container for floating images/emojis -->
+        <div id="mlem-container" aria-hidden="true"></div>
+
+        <script src="config.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>

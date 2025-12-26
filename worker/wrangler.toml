@@ -1,0 +1,20 @@
+name = "mlem-api"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[[kv_namespaces]]
+binding = "MLEM_KV"
+id = "b1b4097a45264f13b8f08ff0a8cde3bb"
+preview_id = "8c63fd42dd6349db9a03ebbfd06aa6b2"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mlem-db"
+database_id = "0d1af831-0bf7-46c7-8d8b-62be7eff2dd8"
+
+[[routes]]
+pattern = "mlem.click/api/*"
+zone_name = "mlem.click"
+
+[vars]
+ENVIRONMENT = "production"
