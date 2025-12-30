@@ -27,6 +27,8 @@ wrangler dev
 # Navigate to http://localhost:8000
 ```
 
+**Note:** The frontend runs in "local mode" during development - clicks won't sync to the database, but all UI features work normally. This is intentional since the API only accepts requests from `mlem.click`.
+
 ## Deployment
 
 Deployment happens automatically via GitHub Actions when pushing to `main`:

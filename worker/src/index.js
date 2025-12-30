@@ -3,13 +3,13 @@ const RATE_LIMIT_WINDOW_SECONDS = 60;
 
 export default {
     async fetch(request, env, _ctx) {
-        const url = new URL(request.url);
-
         const corsHeaders = {
-            'Access-Control-Allow-Origin': url.origin,
+            'Access-Control-Allow-Origin': 'https://mlem.click',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',
         };
+
+        const url = new URL(request.url);
 
         if (request.method === 'OPTIONS') {
             return new Response(null, { headers: corsHeaders });

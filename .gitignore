@@ -2,8 +2,8 @@
 node_modules/
 **/node_modules/
 
-# Config with secrets (generated at build time)
-frontend/config.js
+# Local dev overrides 
+frontend/config.local.js
 
 # Wrangler
 .wrangler/

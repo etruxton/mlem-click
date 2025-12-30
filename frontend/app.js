@@ -6,6 +6,7 @@
         API_URL: '/api/click',
         TURNSTILE_SITE_KEY: window.MLEM_CONFIG?.TURNSTILE_SITE_KEY || '',
         CLICK_COOLDOWN: 100,
+        LOCAL_MODE: !window.MLEM_CONFIG?.TURNSTILE_SITE_KEY,
     };
 
     const MLEM_EMOJIS = [
@@ -57,6 +58,11 @@
     }
 
     function initTurnstile() {
+        if (CONFIG.LOCAL_MODE) {
+            console.log('Local mode: Turnstile disabled, clicks will not sync');
+            return;
+        }
+
         if (typeof turnstile === 'undefined') {
             setTimeout(initTurnstile, 100);
             return;
@@ -79,6 +85,11 @@
     }
 
     async function fetchTotalCount() {
+        if (CONFIG.LOCAL_MODE) {
+            totalCountEl.textContent = '0';
+            return;
+        }
+
         try {
             const response = await fetch('/api/count');
             if (response.ok) {

@@ -1,0 +1,3 @@
+window.MLEM_CONFIG = {
+    TURNSTILE_SITE_KEY: '0x4AAAAAACJGuCAkTMpZnge-',
+};
