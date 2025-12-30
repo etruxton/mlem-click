@@ -42,6 +42,20 @@
     const mlemSound = new Audio('/sound/mlem.mp3');
     mlemSound.preload = 'auto';
 
+    const preloadedImages = [];
+
+    function preloadImages() {
+        for (let i = 1; i <= CONFIG.IMAGE_COUNT; i++) {
+            const img = new Image();
+            img.src = `/images/mlem-${String(i).padStart(3, '0')}.png`;
+            preloadedImages.push(img);
+        }
+    }
+
+    if (CONFIG.IMAGE_COUNT > 0) {
+        preloadImages();
+    }
+
     function initTurnstile() {
         if (typeof turnstile === 'undefined') {
             setTimeout(initTurnstile, 100);
