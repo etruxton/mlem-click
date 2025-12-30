@@ -1,6 +1,6 @@
 # mlem.click
 
-A silly clicker website inspired by [lizard.click](https://lizard.click/). Click the button, hear the mlem, watch the counter go up.
+A silly clicker website inspired by [lizard.click](https://lizard.click/). Click the button to MLEM!
 
 **Live site:** [mlem.click](https://mlem.click)
 
@@ -23,16 +23,14 @@ python -m http.server 8000
 cd worker
 npm install
 wrangler dev
+
+# Navigate to http://localhost:8000
 ```
 
 ## Deployment
 
-```bash
-# Deploy Worker
-cd worker
-wrangler deploy
+Deployment happens automatically via GitHub Actions when pushing to `main`:
 
-# Deploy Frontend
-cd frontend
-npx wrangler pages deploy . --project-name=mlem-click
-```
+1. Linting runs (Prettier + ESLint)
+2. D1 database migrations are applied
+3. Worker and Frontend deploy to Cloudflare in parallel
