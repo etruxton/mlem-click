@@ -71,6 +71,9 @@ jobs:
               with:
                   node-version: '22'
 
+            - name: Cache bust
+              run: node scripts/cache-bust.js
+
             - name: Deploy to Cloudflare Pages
               working-directory: frontend
               run: npx wrangler pages deploy . --project-name=mlem-click
