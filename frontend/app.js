@@ -33,9 +33,12 @@
     let syncTimeout = null;
     const SYNC_DELAY = 500;
 
+    let clicksInWindow = 0;
+
     const button = document.getElementById('mlem-button');
     const sessionCountEl = document.getElementById('session-count');
     const totalCountEl = document.getElementById('total-count');
+    const mpsCountEl = document.getElementById('mps-count');
     const mlemContainer = document.getElementById('mlem-container');
     const turnstileContainer = document.getElementById('turnstile-container');
     const themeToggle = document.getElementById('theme-toggle');
@@ -207,6 +210,7 @@
         playSound();
         spawnMlem();
         sessionCount++;
+        clicksInWindow++;
         sessionCountEl.textContent = formatNumber(sessionCount);
         localStorage.setItem('mlemCount', sessionCount);
 
@@ -259,6 +263,20 @@
         sessionCountEl.textContent = formatNumber(sessionCount);
         initTurnstile();
         fetchTotalCount();
+
+        let lastMpsTime = Date.now();
+        function updateMps() {
+            const now = Date.now();
+            const elapsed = (now - lastMpsTime) / 1000;
+            const mps = (clicksInWindow / elapsed).toFixed(1);
+            mpsCountEl.textContent = mps;
+            clicksInWindow = 0;
+            lastMpsTime = now;
+
+            const randomDelay = 1000 + Math.random() * 1000;
+            setTimeout(updateMps, randomDelay);
+        }
+        setTimeout(updateMps, 1000 + Math.random() * 1000);
     });
 
     document.addEventListener(
