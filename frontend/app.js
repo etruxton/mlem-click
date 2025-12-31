@@ -25,7 +25,7 @@
         '🐈‍⬛',
     ];
 
-    let sessionCount = 0;
+    let sessionCount = parseInt(localStorage.getItem('mlemCount') || '0', 10);
     let totalCount = 0;
     let lastClickTime = 0;
     let turnstileToken = null;
@@ -208,6 +208,7 @@
         spawnMlem();
         sessionCount++;
         sessionCountEl.textContent = formatNumber(sessionCount);
+        localStorage.setItem('mlemCount', sessionCount);
 
         totalCount++;
         totalCountEl.textContent = formatNumber(totalCount);
@@ -255,6 +256,7 @@
     setTheme(getPreferredTheme());
 
     document.addEventListener('DOMContentLoaded', () => {
+        sessionCountEl.textContent = formatNumber(sessionCount);
         initTurnstile();
         fetchTotalCount();
     });
