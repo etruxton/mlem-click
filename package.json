@@ -5,11 +5,18 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "check": "prettier --check . && eslint ."
+        "check": "prettier --check . && eslint .",
+        "prepare": "husky"
     },
     "devDependencies": {
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.2.7",
         "prettier": "^3.7.4"
+    },
+    "lint-staged": {
+        "*.{js,css,html,json,md,yml,yaml}": "prettier --write",
+        "*.js": "eslint --fix"
     }
 }
