@@ -5,7 +5,7 @@
         IMAGE_COUNT: 30,
         API_URL: '/api/click',
         TURNSTILE_SITE_KEY: window.MLEM_CONFIG?.TURNSTILE_SITE_KEY || '',
-        CLICK_COOLDOWN: 100,
+        CLICK_COOLDOWN: 75,
         LOCAL_MODE: !window.MLEM_CONFIG?.TURNSTILE_SITE_KEY,
     };
 
@@ -248,6 +248,13 @@
 
     button.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === ' ' && e.target === document.body) {
             e.preventDefault();
             handleClick();
         }
