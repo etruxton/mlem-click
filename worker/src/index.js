@@ -1,4 +1,4 @@
-const RATE_LIMIT_MAX = 100;
+const RATE_LIMIT_MAX = 500;
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 
 export default {
