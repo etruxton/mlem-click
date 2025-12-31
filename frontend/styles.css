@@ -266,17 +266,24 @@ body {
 
 @media (max-width: 480px) {
     .counter-display {
-        gap: 2rem;
+        top: 4rem;
+        right: 50%;
+        transform: translateX(50%);
+        gap: 1.5rem;
+    }
+
+    .label {
+        font-size: 0.75rem;
     }
 
     .count {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .mlem-button {
-        font-size: 2rem;
-        width: 150px;
-        height: 150px;
+        font-size: 2.5rem;
+        width: 200px;
+        height: 200px;
     }
 
     .mlem-float {
@@ -286,5 +293,12 @@ body {
     .mlem-float img {
         width: 80px;
         height: 80px;
+    }
+
+    .theme-toggle {
+        top: 1rem;
+        left: 1rem;
+        width: 38px;
+        height: 38px;
     }
 }
