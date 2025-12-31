@@ -43,8 +43,19 @@
     const turnstileContainer = document.getElementById('turnstile-container');
     const themeToggle = document.getElementById('theme-toggle');
 
-    const mlemSound = new Audio('/sound/mlem.mp3');
-    mlemSound.preload = 'auto';
+    let audioContext = null;
+    let audioBuffer = null;
+
+    async function initAudio() {
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const response = await fetch('/sound/mlem.mp3');
+            const arrayBuffer = await response.arrayBuffer();
+            audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        } catch (e) {
+            console.error('Failed to init audio:', e);
+        }
+    }
 
     const preloadedImages = [];
 
@@ -149,9 +160,21 @@
     }
 
     function playSound() {
-        const sound = mlemSound.cloneNode();
-        sound.volume = 0.5;
-        sound.play().catch(() => {});
+        if (!audioContext || !audioBuffer) return;
+
+        // Resume context if suspended (mobile browsers)
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+
+        const source = audioContext.createBufferSource();
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.5;
+
+        source.buffer = audioBuffer;
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        source.start(0);
     }
 
     async function syncClicks() {
@@ -263,6 +286,7 @@
         sessionCountEl.textContent = formatNumber(sessionCount);
         initTurnstile();
         fetchTotalCount();
+        initAudio();
 
         let lastMpsTime = Date.now();
         function updateMps() {
@@ -278,13 +302,4 @@
         }
         setTimeout(updateMps, 1000 + Math.random() * 1000);
     });
-
-    document.addEventListener(
-        'click',
-        function preloadSound() {
-            mlemSound.load();
-            document.removeEventListener('click', preloadSound);
-        },
-        { once: true }
-    );
 })();
