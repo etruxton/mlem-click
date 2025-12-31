@@ -17,7 +17,6 @@
         <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     </head>
     <body>
-        <!-- Theme toggle -->
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
             <span class="icon-sun">&#9728;</span>
             <span class="icon-moon">&#9790;</span>
@@ -37,13 +36,17 @@
 
             <button id="mlem-button" class="mlem-button">MLEM</button>
 
-            <!-- Turnstile invisible widget -->
             <div id="turnstile-container"></div>
         </div>
 
         <p class="sound-hint">Unmute your device if you don't hear sound!</p>
 
-        <!-- Mlem container for floating images/emojis -->
+        <p class="footer">
+            <a href="https://github.com/etruxton/mlem-click" target="_blank" rel="noopener"
+                >View source on GitHub</a
+            >
+        </p>
+
         <div id="mlem-container" aria-hidden="true"></div>
 
         <script src="config.js"></script>

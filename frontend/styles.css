@@ -141,7 +141,7 @@ body {
 
 .sound-hint {
     position: fixed;
-    bottom: 1rem;
+    bottom: 2.5rem;
     font-size: 1rem;
     color: var(--text-secondary);
     z-index: 10;
