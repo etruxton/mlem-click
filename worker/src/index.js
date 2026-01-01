@@ -1,12 +1,20 @@
 const RATE_LIMIT_MAX = 500;
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 
+const securityHeaders = {
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+    'X-Frame-Options': 'DENY',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+};
+
 export default {
     async fetch(request, env, _ctx) {
         const corsHeaders = {
             'Access-Control-Allow-Origin': 'https://mlem.click',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',
+            ...securityHeaders,
         };
 
         const url = new URL(request.url);
