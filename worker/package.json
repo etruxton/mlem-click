@@ -21,8 +21,5 @@
         "@cloudflare/vitest-pool-workers": "^0.8.0",
         "vitest": "^3.1.0",
         "wrangler": "^4.0.0"
-    },
-    "dependencies": {
-        "@rollup/rollup-win32-x64-msvc": "^4.54.0"
     }
 }
