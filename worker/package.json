@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "wrangler dev",
         "deploy": "wrangler deploy",
-        "tail": "wrangler tail"
+        "tail": "wrangler tail",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "keywords": [
         "cloudflare",
@@ -16,6 +18,11 @@
     "author": "Erica Truxton",
     "license": "MIT",
     "devDependencies": {
+        "@cloudflare/vitest-pool-workers": "^0.8.0",
+        "vitest": "^3.1.0",
         "wrangler": "^4.0.0"
+    },
+    "dependencies": {
+        "@rollup/rollup-win32-x64-msvc": "^4.54.0"
     }
 }

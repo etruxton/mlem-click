@@ -18,3 +18,17 @@ zone_name = "mlem.click"
 
 [vars]
 ENVIRONMENT = "production"
+
+# Test environment - uses local mock bindings
+[env.test]
+[env.test.vars]
+ENVIRONMENT = "test"
+
+[[env.test.kv_namespaces]]
+binding = "MLEM_KV"
+id = "test-kv-id"
+
+[[env.test.d1_databases]]
+binding = "DB"
+database_name = "mlem-db-test"
+database_id = "test-db-id"
