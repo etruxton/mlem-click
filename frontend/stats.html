@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MLEM Stats</title>
+        <meta name="description" content="Statistics for the global mlem counter" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#ff6b8a" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+        />
+        <link rel="stylesheet" href="styles.css?v=2" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .stats-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+                padding: 2rem;
+                max-width: 800px;
+                margin: 0 auto;
+                z-index: 10;
+                position: relative;
+            }
+
+            .stats-header {
+                text-align: center;
+            }
+
+            .stats-header h1 {
+                font-size: 2.5rem;
+                color: var(--pink-dark);
+                margin-bottom: 0.5rem;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .stat-card {
+                background: var(--bg-secondary);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .stat-card .label {
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--text-secondary);
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-card .value {
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--pink-dark);
+            }
+
+            .chart-container {
+                width: 100%;
+                max-width: 700px;
+                background: var(--bg-secondary);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .chart-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .back-link {
+                margin-top: 1rem;
+            }
+
+            .back-link a {
+                color: var(--text-secondary);
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+
+            .back-link a:hover {
+                color: var(--pink-dark);
+            }
+
+            @media (max-width: 480px) {
+                .stats-header h1 {
+                    font-size: 2rem;
+                }
+
+                .stats-grid {
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.75rem;
+                }
+
+                .stat-card {
+                    padding: 1rem;
+                }
+
+                .stat-card .value {
+                    font-size: 1.5rem;
+                }
+
+                .chart-container {
+                    padding: 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <span class="icon-sun">&#9728;</span>
+            <span class="icon-moon">&#9790;</span>
+        </button>
+
+        <div class="stats-container">
+            <div class="stats-header">
+                <h1>MLEM Stats</h1>
+                <p style="color: var(--text-secondary)">Global mlem counter statistics</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">Total Mlems</div>
+                    <div class="value" id="total-stat">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Today</div>
+                    <div class="value" id="today-stat">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Daily Average</div>
+                    <div class="value" id="average-stat">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Best Day</div>
+                    <div class="value" id="best-stat">...</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Mlems Per Day</div>
+                <canvas id="mlem-chart"></canvas>
+            </div>
+
+            <div class="back-link">
+                <a href="/">&larr; Back to mlems</a>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                'use strict';
+
+                const themeToggle = document.getElementById('theme-toggle');
+
+                function getPreferredTheme() {
+                    const stored = localStorage.getItem('theme');
+                    if (stored) {
+                        return stored;
+                    }
+                    return window.matchMedia('(prefers-color-scheme: dark)').matches
+                        ? 'dark'
+                        : 'light';
+                }
+
+                function setTheme(theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem('theme', theme);
+                }
+
+                function toggleTheme() {
+                    const current = document.documentElement.getAttribute('data-theme');
+                    const next = current === 'dark' ? 'light' : 'dark';
+                    setTheme(next);
+                    updateChartColors();
+                }
+
+                themeToggle.addEventListener('click', toggleTheme);
+                setTheme(getPreferredTheme());
+
+                function formatNumber(num) {
+                    return num.toLocaleString();
+                }
+
+                function getChartColors() {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    return {
+                        line: isDark ? '#ff758f' : '#ff6b8a',
+                        fill: isDark ? 'rgba(255, 117, 143, 0.2)' : 'rgba(255, 107, 138, 0.2)',
+                        grid: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                        text: isDark ? '#e8e8f0' : '#4a4a6a',
+                    };
+                }
+
+                let chart = null;
+
+                function updateChartColors() {
+                    if (!chart) return;
+                    const colors = getChartColors();
+                    chart.data.datasets[0].borderColor = colors.line;
+                    chart.data.datasets[0].backgroundColor = colors.fill;
+                    chart.options.scales.x.ticks.color = colors.text;
+                    chart.options.scales.y.ticks.color = colors.text;
+                    chart.options.scales.x.grid.color = colors.grid;
+                    chart.options.scales.y.grid.color = colors.grid;
+                    chart.update();
+                }
+
+                async function fetchStats() {
+                    try {
+                        const response = await fetch('/api/stats');
+                        if (!response.ok) throw new Error('Failed to fetch stats');
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching stats:', error);
+                        return null;
+                    }
+                }
+
+                function formatDate(dateStr) {
+                    const date = new Date(dateStr + 'T00:00:00');
+                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }
+
+                async function init() {
+                    const stats = await fetchStats();
+                    if (!stats) return;
+
+                    document.getElementById('total-stat').textContent = formatNumber(stats.total);
+                    document.getElementById('today-stat').textContent = formatNumber(stats.today);
+                    document.getElementById('average-stat').textContent = formatNumber(
+                        stats.average
+                    );
+                    document.getElementById('best-stat').textContent = formatNumber(stats.best);
+
+                    const colors = getChartColors();
+                    const ctx = document.getElementById('mlem-chart').getContext('2d');
+
+                    chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: stats.daily.map((d) => formatDate(d.date)),
+                            datasets: [
+                                {
+                                    label: 'Mlems',
+                                    data: stats.daily.map((d) => d.count),
+                                    borderColor: colors.line,
+                                    backgroundColor: colors.fill,
+                                    fill: true,
+                                    tension: 0.3,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return formatNumber(context.raw) + ' mlems';
+                                        },
+                                    },
+                                },
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: colors.text },
+                                    grid: { color: colors.grid },
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: colors.text,
+                                        callback: function (value) {
+                                            return formatNumber(value);
+                                        },
+                                    },
+                                    grid: { color: colors.grid },
+                                },
+                            },
+                        },
+                    });
+                }
+
+                init();
+            })();
+        </script>
+    </body>
+</html>

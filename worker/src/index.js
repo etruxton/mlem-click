@@ -32,6 +32,10 @@ export default {
                 return await handleClick(request, env, corsHeaders);
             }
 
+            if (url.pathname === '/api/stats' && request.method === 'GET') {
+                return await handleGetStats(env, corsHeaders);
+            }
+
             return new Response(JSON.stringify({ error: 'Not found' }), {
                 status: 404,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -108,6 +112,13 @@ async function handleClick(request, env, corsHeaders) {
         .first();
     const newTotal = result?.total || 0;
 
+    const today = new Date().toISOString().split('T')[0];
+    await env.DB.prepare(
+        'INSERT INTO daily_stats (date, count) VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET count = count + ?'
+    )
+        .bind(today, clickCount, clickCount)
+        .run();
+
     return new Response(JSON.stringify({ count: newTotal, success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -131,4 +142,36 @@ async function validateTurnstile(token, ip, env) {
         console.error('Turnstile validation error:', error);
         return false;
     }
+}
+
+async function handleGetStats(env, corsHeaders) {
+    const dailyStats = await env.DB.prepare(
+        'SELECT date, count FROM daily_stats ORDER BY date DESC LIMIT 30'
+    ).all();
+
+    const totalResult = await env.DB.prepare('SELECT total FROM clicks WHERE id = 1').first();
+    const total = totalResult?.total || 0;
+
+    const days = dailyStats.results || [];
+    const totalDays = days.length;
+    const totalInPeriod = days.reduce((sum, day) => sum + day.count, 0);
+    const average = totalDays > 0 ? Math.round(totalInPeriod / totalDays) : 0;
+    const best = days.length > 0 ? Math.max(...days.map((d) => d.count)) : 0;
+
+    const today = new Date().toISOString().split('T')[0];
+    const todayData = days.find((d) => d.date === today);
+    const todayCount = todayData?.count || 0;
+
+    return new Response(
+        JSON.stringify({
+            total,
+            today: todayCount,
+            average,
+            best,
+            daily: days.reverse(),
+        }),
+        {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+    );
 }
