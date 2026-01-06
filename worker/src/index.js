@@ -112,7 +112,7 @@ async function handleClick(request, env, corsHeaders) {
         .first();
     const newTotal = result?.total || 0;
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
     await env.DB.prepare(
         'INSERT INTO daily_stats (date, count) VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET count = count + ?'
     )
@@ -158,7 +158,7 @@ async function handleGetStats(env, corsHeaders) {
     const average = totalDays > 0 ? Math.round(totalInPeriod / totalDays) : 0;
     const best = days.length > 0 ? Math.max(...days.map((d) => d.count)) : 0;
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
     const todayData = days.find((d) => d.date === today);
     const todayCount = todayData?.count || 0;
 
