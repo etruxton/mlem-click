@@ -4,6 +4,13 @@ A silly clicker website inspired by [lizard.click](https://lizard.click/). Click
 
 **Live site:** [mlem.click](https://mlem.click)
 
+## Features
+
+- Click the button to add to the global mlem counter
+- Sound effects and floating `mlem` images
+- Milestone achievements (10, 25, 50, 100, etc.)
+- [Stats page](https://mlem.click/stats) with daily mlem chart and statistics
+
 ## Tech Stack
 
 - **Frontend:** Vanilla JS, CSS

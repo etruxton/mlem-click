@@ -236,8 +236,22 @@
                 }
 
                 function formatDate(dateStr) {
-                    const date = new Date(dateStr + 'T00:00:00');
-                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    const [, month, day] = dateStr.split('-');
+                    const months = [
+                        'Jan',
+                        'Feb',
+                        'Mar',
+                        'Apr',
+                        'May',
+                        'Jun',
+                        'Jul',
+                        'Aug',
+                        'Sep',
+                        'Oct',
+                        'Nov',
+                        'Dec',
+                    ];
+                    return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}`;
                 }
 
                 async function init() {
