@@ -2,7 +2,7 @@
     'use strict';
 
     const CONFIG = {
-        IMAGE_COUNT: 30,
+        IMAGE_COUNT: 50,
         API_URL: '/api/click',
         TURNSTILE_SITE_KEY: window.MLEM_CONFIG?.TURNSTILE_SITE_KEY || '',
         CLICK_COOLDOWN: 75,
