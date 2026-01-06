@@ -18,5 +18,6 @@
     "lint-staged": {
         "*.{js,css,html,json,md,yml,yaml}": "prettier --write",
         "*.js": "eslint --fix"
-    }
+    },
+    "license": "Apache-2.0"
 }

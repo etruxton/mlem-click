@@ -42,6 +42,19 @@
     const mlemContainer = document.getElementById('mlem-container');
     const turnstileContainer = document.getElementById('turnstile-container');
     const themeToggle = document.getElementById('theme-toggle');
+    const shareButton = document.getElementById('share-button');
+    const toastContainer = document.getElementById('toast-container');
+
+    const MILESTONES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+    const achievedMilestones = JSON.parse(localStorage.getItem('mlemMilestones') || '[]');
+
+    // Sync milestones with current count (in case user already passed some)
+    for (const milestone of MILESTONES) {
+        if (sessionCount >= milestone && !achievedMilestones.includes(milestone)) {
+            achievedMilestones.push(milestone);
+        }
+    }
+    localStorage.setItem('mlemMilestones', JSON.stringify(achievedMilestones));
 
     let audioContext = null;
     let audioBuffer = null;
@@ -242,6 +255,8 @@
 
         pendingClicks++;
         scheduleSyncClicks();
+
+        checkMilestones();
     }
 
     button.addEventListener('click', handleClick);
@@ -288,6 +303,58 @@
     });
 
     setTheme(getPreferredTheme());
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+
+        toast.addEventListener('animationend', (e) => {
+            if (e.animationName === 'toast-out') {
+                toast.remove();
+            }
+        });
+    }
+
+    function checkMilestones() {
+        for (const milestone of MILESTONES) {
+            if (sessionCount >= milestone && !achievedMilestones.includes(milestone)) {
+                achievedMilestones.push(milestone);
+                localStorage.setItem('mlemMilestones', JSON.stringify(achievedMilestones));
+                const randomEmoji = MLEM_EMOJIS[Math.floor(Math.random() * MLEM_EMOJIS.length)];
+                showToast(`${randomEmoji} ${formatNumber(milestone)} mlems!`);
+                break;
+            }
+        }
+    }
+
+    async function shareResults() {
+        const text = `My mlems: ${formatNumber(sessionCount)} | Total mlems: ${formatNumber(totalCount)} | https://mlem.click`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ text });
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    await copyToClipboard(text);
+                }
+            }
+        } else {
+            await copyToClipboard(text);
+        }
+    }
+
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast('Copied to clipboard!');
+        } catch {
+            showToast('Could not copy');
+        }
+    }
+
+    shareButton.addEventListener('click', shareResults);
 
     document.addEventListener('DOMContentLoaded', () => {
         sessionCountEl.textContent = formatNumber(sessionCount);
