@@ -263,15 +263,33 @@
     button.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
+            button.classList.add('pressed');
             handleClick();
+        }
+    });
+
+    button.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            button.classList.remove('pressed');
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ' && e.target === document.body) {
             e.preventDefault();
+            button.classList.add('pressed');
             handleClick();
         }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === ' ') {
+            button.classList.remove('pressed');
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        button.classList.remove('pressed');
     });
 
     function getPreferredTheme() {
