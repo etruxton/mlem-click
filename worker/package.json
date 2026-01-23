@@ -19,7 +19,7 @@
     "license": "Apache-2.0",
     "devDependencies": {
         "@cloudflare/vitest-pool-workers": "^0.12.4",
-        "vitest": "^3.1.0",
+        "vitest": "^4.0.18",
         "wrangler": "^4.59.2"
     }
 }
